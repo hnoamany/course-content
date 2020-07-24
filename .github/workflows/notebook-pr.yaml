@@ -19,6 +19,7 @@ jobs:
         with:
           persist-credentials: false
           fetch-depth: 0
+          ref: ${{ github.head_ref }}
 
       - name: Set up Python
         uses: actions/setup-python@v2
@@ -48,7 +49,7 @@ jobs:
         run: |
           nbs=`python ci/select_notebooks.py ${{ steps.changes.outputs.files}}`
           python ci/process_notebooks.py $nbs
-          readonly local last_commit_log=$(git log -2 --pretty=format:"%s")
+          readonly local last_commit_log=$(git log -1 --pretty=format:"%s")
           python ci/verify_exercises.py $nbs --c "$last_commit_log"
 
       - name: Update READMEs
